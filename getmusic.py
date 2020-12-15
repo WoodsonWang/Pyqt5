@@ -15,12 +15,21 @@ url = 'https://api.zhuolin.wang/api.php'
 # https://api.zhuolin.wang/api.php?types=url&id=418aa3f6c40e46f847fa79ae85b16656&source=kugou
 download_url = 'http://fs.ios.kugou.com/202010252247/9cb1b4c09c2c373b6263ab79a7355d13/G221/M04/0A/00/HQ4DAF8ecg6AV-2FACv-Nh0P7z4142.mp3'
 
-def req_get(music_name,baseurl=url):
+def req_get(music_name,source,baseurl=url):
+    '''
+    获取歌曲列表
+    :param music_name:
+    :param source: 数字
+    :param baseurl:
+    :return:
+    '''
+    '0 网易云  1  QQ  2 虾米  3 酷狗 4 百度'
+    sources = ['netease','tencent','xiami','kugou','baidu']
     getdata = {
         # "callback ": 'jQuery1113023236435553523216_1603633972378',
         'types': 'search',
         'count': 20,
-        'source': 'kugou',
+        'source': sources[source],
         'pages': 1,
         'name': music_name
     }
@@ -76,8 +85,8 @@ def download_file(base_path,file_url,music_size,name,download_signal):
 postdata = {
     "callback ": 'jQuery1113023236435553523216_1603633972378',
     'types':'search',
-    'count':20,
-    'source':'kugou',
+    'count':100,
+    'source':'tencent', # tencent  kugou
     'pages':1,
     'name':'红玫瑰'
 }
@@ -121,7 +130,8 @@ class Music:
 # result = r.content.decode('unicode-escape')
 if __name__ == '__main__':
     # music_list = []
-    # result = req_get(url)
+    result = req_get('忘川彼岸',2,)
+    print(result)
     # load = ast.literal_eval(result)
     # for item in load:
     #     print(item)
@@ -134,4 +144,4 @@ if __name__ == '__main__':
     # for m in music_list:
     #     print(m.name)
     # download_file('http:\/\/fs.ios.kugou.com\/202010252254\/a10ab1cae0e3b6c036a436848d07b2a0\/G221\/M04\/0A\/00\/HQ4DAF8ecg6AV-2FACv-Nh0P7z4142.mp3',"忘川彼岸.mp3")
-    get_download_url('33e1cefb0164f8eb0a4f30ce51336ed4','kugou')
+    # get_download_url('33e1cefb0164f8eb0a4f30ce51336ed4','kugou')

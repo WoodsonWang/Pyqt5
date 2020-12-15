@@ -10,10 +10,10 @@ from view.mainview import *
 from PyQt5.QtCore import  QStringListModel,QThread,pyqtSignal ,QPoint,Qt
 import sys,os
 from Music.getmusic import *
-def get_music_list(search_content):
+def get_music_list(search_content,source_count):
     music_list = []
-    result = req_get(search_content)
-
+    result = req_get(search_content,source=source_count)
+    print(result)
     load = ast.literal_eval(result)
     for item in load:
         # print(item)
@@ -39,7 +39,7 @@ class MyMainView(QMainWindow, Ui_MainWindow):
         self.qlist = []
         self.slm.setStringList(self.qlist)
         self.musicListView.setModel(self.slm)
-
+        self.searchBtn.setStyleSheet('''QPushButton{background:#F7667;border-radius:5px;}''')
 
         self.searchBtn.clicked.connect(self.search_music)
 
@@ -50,6 +50,12 @@ class MyMainView(QMainWindow, Ui_MainWindow):
 
         # 选择存储文件夹
         self.selectFolder.triggered.connect(self.selectFolderAction)
+
+        # 选择歌曲源
+
+        self.sourceBox.addItems(['网抑云','QQ','虾米','酷狗','百度'])
+
+
     def selectFolderAction(self):
         directory = QFileDialog.getExistingDirectory(self, "选择文件夹", "./")
         self.path = directory
@@ -78,7 +84,7 @@ class MyMainView(QMainWindow, Ui_MainWindow):
         if not search_content:
             self.showMessage("请输入搜索内容！！！")
         else:
-            self.back_task = BackTaskThread(search_content)
+            self.back_task = BackTaskThread(search_content,self.sourceBox.currentIndex())
             # 连接信号
             self.back_task.update_music_list.connect(self.update_music_list)
             # 开始线程
@@ -128,15 +134,16 @@ class MyMainView(QMainWindow, Ui_MainWindow):
 class BackTaskThread(QThread):
     update_music_list = pyqtSignal(list)
 
-    def __init__(self,content):
+    def __init__(self,content,scource_count):
         super().__init__()
         self.search_content = content
+        self.source_count = scource_count
         print(content)
 
 
     def run(self) -> None:
 
-        music_list = get_music_list(self.search_content)
+        music_list = get_music_list(self.search_content,self.source_count)
 
         self.update_music_list.emit(music_list)
 
@@ -167,5 +174,6 @@ class DownloadMusicThread(QThread):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     myWin = MyMainView()
+    myWin.setStyleSheet("#MainWindow{background-color:#FF9933}")
     myWin.show()
     sys.exit(app.exec_())

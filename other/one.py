@@ -42,5 +42,17 @@ if __name__ == '__main__':
     # print(int(sum))
     # print(os.getcwd())
 
-    print("99"+'0000')
-
+    # print("99"+'0000')
+    file = 'D:\\codeproject\\github\\Notes\\_posts\\2020-10-31-通过githubpages搭建博客.md'
+    # file = 'D:\\codeproject\\github\\Notes\\_posts\\2020-10-28-Test.md'
+    # file = 'D:\\codeproject\\github\\Notes\\_posts\\2020-10-31-other其他.md'
+    import chardet
+    #
+    # with  open(file, 'rb') as f:
+    #     data = f.read()
+    #
+    #     print(chardet.detect(data))
+    import datetime
+    time = datetime.datetime.now().strftime('%Y-%m-%d')
+    print(type(time))
+    print(os.path.exists(file))
